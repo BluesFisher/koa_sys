@@ -1,0 +1,37 @@
+{
+  "name": "code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prod": "NODE_ENV=production node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "graphql": "^14.6.0",
+    "ioredis": "^4.16.0",
+    "ip": "^1.1.5",
+    "jsonwebtoken": "^8.5.1",
+    "kafka-node": "^5.0.0",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-csrf": "^3.0.8",
+    "koa-graphql": "^0.8.0",
+    "koa-jwt": "^3.6.0",
+    "koa-mount": "^4.0.0",
+    "koa-nunjucks-2": "^3.0.2",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.12.2",
+    "koa-session2": "^2.2.10",
+    "koa-static": "^4.0.2",
+    "koa2-cors": "^2.0.6",
+    "log4js": "^2.5.3",
+    "moment": "^2.24.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
