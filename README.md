@@ -15,6 +15,9 @@
 # 测试sso，新增hosts
 $ mac /etc/hosts 增加 *.test.com 的多域名映射到127.0.0.1
 
+# 前端sso测试代码路径
+$ https://github.com/BluesFisher/koa_front.git
+
 # 本地开发环境
 $ nodemon app.js
 默认访问地址：http://[*].test.com:8080
