@@ -1,16 +1,8 @@
-const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
 // 自动刷新token
 module.exports = app => async (ctx, next) => {
-  const {
-    secret,
-    refreshDiffMinutes,
-    cookieParams,
-    sidMaxAge,
-    expiresIn,
-    filterPath
-  } = app.config.jwtConfig;
+  const { refreshDiffMinutes, filterPath } = app.config.jwtConfig;
 
   if (
     filterPath.reduce((result, item) => result || item.test(ctx.url), false)
@@ -40,7 +32,7 @@ module.exports = app => async (ctx, next) => {
   // 如果未来5min内token过期
   if (diffMinutes < refreshDiffMinutes) {
     await app.config.redisStore.destroy(sid);
-    const newSid = await ctx.app.lib.saveToken(ctx, user);
+    const { sid: newSid } = await ctx.app.lib.saveToken(ctx, user);
     ctx.state.user.sid = newSid;
   }
 

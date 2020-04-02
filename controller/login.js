@@ -9,7 +9,7 @@ module.exports = {
       let login = await ctx.app.service.login.login(ctx, phone, password);
 
       if (login) {
-        await ctx.app.lib.saveToken(ctx, { phone });
+        const { token } = await ctx.app.lib.saveToken(ctx, { phone });
 
         ctx.send({ code: 0, msg: "登陆成功", data: { token } });
         return;
