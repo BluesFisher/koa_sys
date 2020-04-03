@@ -2,7 +2,7 @@ const moment = require("moment");
 
 // 自动刷新token
 module.exports = app => async (ctx, next) => {
-  const { refreshDiffMinutes, filterPath } = app.config.jwtConfig;
+  const { refreshDiffMinutes, filterPath, cookieParams } = app.config.jwtConfig;
 
   if (
     filterPath.reduce((result, item) => result || item.test(ctx.url), false)
@@ -31,6 +31,13 @@ module.exports = app => async (ctx, next) => {
 
   // 如果未来5min内token过期
   if (diffMinutes < refreshDiffMinutes) {
+    // 只有认证中心才能更新token
+    if (!ctx.origin.includes(cookieParams.domain)) {
+      ctx.status = 401;
+      ctx.body = { code: 401, msg: "未登陆", data: {} };
+      return;
+    }
+
     await app.config.redisStore.destroy(sid);
     const { sid: newSid } = await ctx.app.lib.saveToken(ctx, user);
     ctx.state.user.sid = newSid;
