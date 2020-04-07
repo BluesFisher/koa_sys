@@ -1,12 +1,12 @@
 module.exports = {
-  login: async function(ctx, phone, password) {
+  login: async function (ctx, phone, password) {
     let res = await ctx.app.lib.sqlQuery(ctx.app.dao.usersDao.login, [
       phone,
-      password
+      password,
     ]);
 
     ctx.app.lib.kafka.producer.sendMsg([
-      { topic: "login", partition: 0, messages: "login again" + new Date() }
+      { topic: "login", partition: 0, messages: "login again " + new Date() },
     ]);
 
     if (
@@ -20,15 +20,15 @@ module.exports = {
     }
   },
 
-  findUser: async function(ctx, phone, password) {
+  findUser: async function (ctx, phone, password) {
     let res = await ctx.app.lib.sqlQuery(ctx.app.dao.usersDao.queryByPhone, [
-      phone
+      phone,
     ]);
 
     return res.length !== 0;
   },
 
-  register: async function(ctx, phone, password) {
+  register: async function (ctx, phone, password) {
     if (await this.findUser(ctx, phone, password)) {
       return { code: 202, msg: "用户已存在" };
     }
@@ -41,5 +41,5 @@ module.exports = {
     } else {
       return { code: 0, msg: "注册失败" };
     }
-  }
+  },
 };
