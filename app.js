@@ -2,9 +2,6 @@ const Koa = require("koa");
 const app = new Koa();
 const router = require("./router/router");
 const middleware = require("./middleware");
-const numCPUs = require("os").cpus().length;
-
-console.log("numCPUs", numCPUs);
 
 middleware(app);
 router(app);

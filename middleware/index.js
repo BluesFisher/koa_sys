@@ -14,77 +14,83 @@ const miJwtRefresh = require("./mi-jwt/refresh");
 const miCors = require("./mi-cors");
 const miCsrf = require("./mi-csrf");
 const miGraphql = require("./mi-graphql");
+const miLimit = require("./mi-limit");
 
-module.exports = app => {
+module.exports = (app) => {
   miRule({
     app,
     rules: [
       {
         //指定controller文件夹下的js文件，挂载在app.controller属性
         folder: path.join(__dirname, "../controller"),
-        name: "controller"
+        name: "controller",
       },
       {
         // 指定service文件夹下的js文件，挂载在app.service属性
         folder: path.join(__dirname, "../service"),
-        name: "service"
+        name: "service",
       },
       {
         // 指定config文件夹下的js文件，挂载在app.config
         folder: path.join(__dirname, "../config"),
-        name: "config"
+        name: "config",
       },
       {
         // 指定lib文件夹下的js文件，挂载在app.lib
         folder: path.join(__dirname, "../lib"),
-        name: "lib"
+        name: "lib",
       },
       {
         // 指定dao文件夹下的js文件，挂载在app.dao
         folder: path.join(__dirname, "../dao"),
-        name: "dao"
+        name: "dao",
       },
       {
         // 指定cloudFunc文件夹下的js文件，挂载在app.cloudFunc
         folder: path.join(__dirname, "../cloudFunc"),
-        name: "cloudFunc"
-      }
-    ]
+        name: "cloudFunc",
+      },
+    ],
   });
 
-  app.use(miCors());
-  app.use(miSend());
-  app.use(miGraphql(app));
-  app.use(miSession(app));
-  app.use(miCsrf(app));
-
-  app.use(miJwtCatch(app));
-  app.use(miJwt(app));
-  app.use(miJwtRefresh(app));
-
   app.use(
-    miHttpError({
-      errorPageFolder: path.resolve(__dirname, "../errorPage")
+    nunjucks({
+      ext: "html",
+      path: path.join(__dirname, "../views"),
+      nunjucksConfig: {
+        trimBlocks: true,
+      },
     })
   );
+
   app.use(
     miLog({
       env: app.env,
       projectName: "koa2-tutorial",
       appLogLevel: "debug",
       dir: "logs",
-      serverIp: ip.address()
+      serverIp: ip.address(),
     })
   );
-  app.use(staticFiles(path.resolve(__dirname, "../public")));
+
   app.use(
-    nunjucks({
-      ext: "html",
-      path: path.join(__dirname, "../views"),
-      nunjucksConfig: {
-        trimBlocks: true
-      }
+    miHttpError({
+      errorPageFolder: path.resolve(__dirname, "../errorPage"),
     })
   );
+
+  app.use(staticFiles(path.resolve(__dirname, "../public")));
+
+  app.use(miCors());
+  app.use(miSend());
+  app.use(miGraphql(app));
+  app.use(miSession(app));
+  app.use(miLimit(app));
+  app.use(miCsrf(app));
+
+  app.use(miJwtCatch(app));
+  app.use(miJwt(app));
+  app.use(miJwtRefresh(app));
+
   app.use(bodyParser());
 };
