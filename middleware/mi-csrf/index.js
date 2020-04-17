@@ -1,5 +1,7 @@
 const CSRF = require("koa-csrf");
 
+const URL_WHITELIST = ["/log/getLogItem"];
+
 module.exports = (app) => {
   app.use(
     new CSRF({
@@ -17,6 +19,7 @@ module.exports = (app) => {
       ctx.send({ code: 0, data: { csrfToken: ctx.csrf } });
       return;
     }
+
     await next();
   };
 };

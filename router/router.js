@@ -1,6 +1,6 @@
 const router = require("koa-router")();
 
-module.exports = app => {
+module.exports = (app) => {
   router.post("/cloudFunc/registFunc", app.controller.cloudFunc.registFunc);
   router.post("/cloudFunc/excuteFunc", app.controller.cloudFunc.excuteFunc);
 
@@ -11,6 +11,8 @@ module.exports = app => {
     app.controller.login.loginWithPassword
   );
   router.post("/user/getUserInfo", app.controller.login.getUserInfo);
+
+  router.post("/log/getLogItem", app.controller.logInfo.getLogItem);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

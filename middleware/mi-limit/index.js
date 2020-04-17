@@ -5,7 +5,7 @@ module.exports = function (app) {
   return RateLimit.middleware({
     interval: { min: 15 }, // 15 minutes = 15*60*1000
     max: 100, // limit each IP to 100 requests per interval
-    delayAfter: 1, // begin slowing down responses after the first request
+    delayAfter: 100, // begin slowing down responses after the first request
     timeWait: 3 * 1000, // slow down subsequent responses by 3 seconds per request
     // prefixKey: "get/", // to allow the bdd to Differentiate the endpoint
     whitelist: [], // Array of whitelisted IPs to not be rate limited.

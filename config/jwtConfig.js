@@ -6,12 +6,13 @@ module.exports = {
   cookieParams: {
     maxAge: 60 * 60 * 1000, // token在客户端缓存1h，大于等于expiresIn即可
     httpOnly: false,
-    domain: "cas.test.com"
+    domain: "cas.test.com",
   },
   filterPath: [
     /^\/user\/loginWithPassword/,
     /^\/user\/register/,
     /^\/getBaseInfo/,
-    /^\/cloudFunc+/
-  ]
+    /^\/cloudFunc+/,
+    /^\/log\/getLogItem/,
+  ],
 };
