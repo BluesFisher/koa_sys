@@ -17,6 +17,10 @@ const miGraphql = require("./mi-graphql");
 const miLimit = require("./mi-limit");
 
 module.exports = (app) => {
+  const isDemo = process.argv.includes("Demo");
+
+  isDemo && console.log("============ node run in isDemo ============");
+
   miRule({
     app,
     rules: [

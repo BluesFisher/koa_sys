@@ -52,5 +52,5 @@ module.exports = {
 
   getBaseInfo: async (ctx, next) => {
     ctx.send({ code: 0, message: "ok", data: {} });
-  }
+  },
 };
