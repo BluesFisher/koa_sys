@@ -9,10 +9,9 @@ module.exports = {
     domain: "cas.test.com",
   },
   filterPath: [
-    /^\/user\/loginWithPassword/,
-    /^\/user\/register/,
-    /^\/getBaseInfo/,
     /^\/cloudFunc+/,
     /^\/log\/getLogItem/,
+    /^\/getBaseInfo/,
+    /^\/getSid/,
   ],
 };

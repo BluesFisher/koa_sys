@@ -1,3 +1,5 @@
+// 调用接口时在header中带上csrf-token
+
 const CSRF = require("koa-csrf");
 
 const URL_WHITELIST = ["/log/getLogItem"];

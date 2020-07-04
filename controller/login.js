@@ -1,56 +1,35 @@
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
+const { getReqParam } = require("../lib/dealRequest");
+const dubbo = require("../lib/dubbo");
 
 module.exports = {
-  loginWithPassword: async (ctx, next) => {
-    let { phone, password } = ctx.request.body;
-    console.log("loginWithPassword", phone, password);
-
-    if (phone && password) {
-      let login = await ctx.app.service.login.login(ctx, phone, password);
-
-      if (login) {
-        const { token } = await ctx.app.lib.saveToken(ctx, { phone });
-
-        ctx.send({ code: 0, msg: "登陆成功", data: { token } });
-        return;
-      }
-    }
-
-    ctx.send({ code: 0, msg: "登陆失败", data: {} });
-  },
-
-  register: async (ctx, next) => {
-    let { phone, password } = ctx.request.body;
-    console.log("register", phone, password);
-
-    let data = await ctx.app.service.login.register(ctx, phone, password);
-
-    ctx.send(data);
-  },
-
-  getUserInfo: async (ctx, next) => {
-    const token = ctx.header.authorization;
-
-    const { sid } = ctx.state.user;
-
-    // 有jwt，且jwt中有sid，并且能从redis拿到sid对应的信息，则认为已登陆
-    if (sid) {
-      let user = sid ? await ctx.app.config.redisStore.get(sid) : {};
-      console.log("getUserInfo", user, sid);
-
-      if (user) {
-        ctx.send({ code: 0, message: "已登陆", data: { user } });
-        return;
-      }
-    }
-
-    // token 过期或无效
-    ctx.status = 401;
-    ctx.body = { code: 401, msg: "未登陆", data: {} };
-    return;
-  },
-
+  // 获取csrfToken
   getBaseInfo: async (ctx, next) => {
     ctx.send({ code: 0, message: "ok", data: {} });
+  },
+  /**
+   * @function 获取userId
+   * @param {Object} ctx.request.body
+   * @param {String} ctx.request.body.code 微信获取的code
+   * @returns sid
+   **/
+  getSid: async (ctx, next) => {
+    const { code } = ctx.request.body;
+    if (!code) {
+      return ctx.send({ code: -1, message: "err: no code", data: {} });
+    }
+
+    const params = { openId: ctx.app.service.login.getOpenId({ code }) };
+    const reqParam = getReqParam({ ctx, params, needAuth: false });
+
+    const res = await dubbo.service.userService.userAuthorise(reqParam);
+
+    // const { token } = await ctx.app.lib.saveToken(ctx, { phone });
+
+    // ctx.send({ code: 0, msg: "登陆成功", data: { token } });
+
+    console.log("=====", res);
+
+    ctx.send({ code: 0, message: "ok", data: { ...reqParam } });
   },
 };

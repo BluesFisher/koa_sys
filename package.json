@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon app.js Demo",
     "prod": "NODE_ENV=production node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -31,7 +32,8 @@
     "koa2-ratelimit": "^0.9.0",
     "log4js": "^2.5.3",
     "moment": "^2.24.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
