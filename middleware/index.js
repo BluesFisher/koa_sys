@@ -92,9 +92,9 @@ module.exports = (app) => {
   app.use(miLimit(app));
   //   app.use(miCsrf(app));
 
-  //   app.use(miJwtCatch(app));
-  //   app.use(miJwt(app));
-  //   app.use(miJwtRefresh(app));
+  app.use(miJwtCatch(app));
+  app.use(miJwt(app));
+  app.use(miJwtRefresh(app));
 
   app.use(bodyParser());
 };

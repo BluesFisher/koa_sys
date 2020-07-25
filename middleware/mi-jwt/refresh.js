@@ -1,7 +1,8 @@
 const moment = require("moment");
 
 // 自动刷新token
-module.exports = app => async (ctx, next) => {
+// 可以直接从 ctx.state.user 获取用户信息
+module.exports = (app) => async (ctx, next) => {
   const { refreshDiffMinutes, filterPath, cookieParams } = app.config.jwtConfig;
 
   if (
@@ -12,7 +13,9 @@ module.exports = app => async (ctx, next) => {
   }
 
   const { exp, sid } = ctx.state.user;
+
   if (!exp || !sid) {
+    console.log("token invalid: ", { exp, sid });
     ctx.status = 401;
     ctx.body = { code: 401, msg: "未登陆", data: {} };
     return;
@@ -21,7 +24,7 @@ module.exports = app => async (ctx, next) => {
   const diffMinutes = moment.unix(exp || 0).diff(moment(), "minute");
 
   const user = await app.config.redisStore.get(sid || "");
-  console.log("refresh: ", exp, diffMinutes, sid, user);
+  console.log("token refresh: ", { exp, diffMinutes, sid, user });
   // 如果sid已过期
   if (!user) {
     ctx.status = 401;

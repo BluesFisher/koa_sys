@@ -33,6 +33,7 @@
     "log4js": "^2.5.3",
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
+    "request": "^2.88.0",
     "uuid": "^8.2.0"
   },
   "devDependencies": {

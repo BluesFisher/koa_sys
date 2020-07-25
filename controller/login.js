@@ -5,6 +5,8 @@ const dubbo = require("../lib/dubbo");
 module.exports = {
   // 获取csrfToken
   getBaseInfo: async (ctx, next) => {
+    console.log("getBaseInfo", ctx.state.user);
+
     ctx.send({ code: 0, message: "ok", data: {} });
   },
   /**
@@ -19,17 +21,31 @@ module.exports = {
       return ctx.send({ code: -1, message: "err: no code", data: {} });
     }
 
-    const params = { openId: ctx.app.service.login.getOpenId({ code }) };
-    const reqParam = getReqParam({ ctx, params, needAuth: false });
+    const { openId, errmsg, errcode } = await ctx.app.service.login.getOpenId({
+      ctx,
+      code,
+    });
 
-    const res = await dubbo.service.userService.userAuthorise(reqParam);
+    if (errmsg) {
+      return ctx.send({ mod: "", code: errcode || -1, msg: errmsg, data: {} });
+    }
 
-    // const { token } = await ctx.app.lib.saveToken(ctx, { phone });
+    const reqParam = getReqParam({ ctx, params: { openId }, needAuth: false });
+    const { res = {} } = await dubbo.service.userService.userAuthorise(
+      reqParam
+    );
+    const { data, msg, code: resCode, mod } = res || {};
 
-    // ctx.send({ code: 0, msg: "登陆成功", data: { token } });
+    if (resCode !== 0) {
+      return ctx.send({ mod, code: resCode, msg: msg || "暂无权限", data: {} });
+    }
 
-    console.log("=====", res);
+    const { token } = await ctx.app.lib.saveToken(ctx, { userId: data });
 
-    ctx.send({ code: 0, message: "ok", data: { ...reqParam } });
+    console.log("=====", res, token);
+
+    ctx.send({ code: 0, msg: "登陆成功", data: { token } });
+
+    // ctx.send(res);
   },
 };

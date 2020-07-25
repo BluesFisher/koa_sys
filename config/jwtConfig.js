@@ -11,7 +11,7 @@ module.exports = {
   filterPath: [
     /^\/cloudFunc+/,
     /^\/log\/getLogItem/,
-    /^\/getBaseInfo/,
+    // /^\/getBaseInfo/,
     /^\/getSid/,
   ],
 };
