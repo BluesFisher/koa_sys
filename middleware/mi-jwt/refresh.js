@@ -24,7 +24,10 @@ module.exports = (app) => async (ctx, next) => {
   const diffMinutes = moment.unix(exp || 0).diff(moment(), "minute");
 
   const user = await app.config.redisStore.get(sid || "");
-  console.log("token refresh: ", { exp, diffMinutes, sid, user });
+  console.log(
+    "token refresh: ",
+    JSON.stringify({ exp, diffMinutes, sid, user })
+  );
   // 如果sid已过期
   if (!user) {
     ctx.status = 401;
@@ -44,6 +47,7 @@ module.exports = (app) => async (ctx, next) => {
     await app.config.redisStore.destroy(sid);
     const { sid: newSid } = await ctx.app.lib.saveToken(ctx, user);
     ctx.state.user.sid = newSid;
+    ctx.session.sid = newSid;
   }
 
   await next();
